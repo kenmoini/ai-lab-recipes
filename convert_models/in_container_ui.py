@@ -1,6 +1,8 @@
 import streamlit as st
 import subprocess
 import os
+import boto3
+from botocore.exceptions import ClientError
 
 quantization_types = ["Q2_K","Q3_K_S","Q3_K_M", "Q3_K_L", "Q4_K_S",
                       "Q4_K_M", "Q5_K_S", "Q5_K_M", "Q6_K"]
