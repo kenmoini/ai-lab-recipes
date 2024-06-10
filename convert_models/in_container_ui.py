@@ -36,6 +36,7 @@ if submit_button:
         bucket_port = os.environ.get('BUCKET_PORT', "443")
         bucket_protocol = os.environ.get('BUCKET_PROTOCOL', "https")
         bucket_region = os.environ.get('BUCKET_REGION', "")
+        verifySSLEnv = os.environ.get("S3_VERIFY_SSL", "True")
     if f"{s3_connection_type}" == "Nooba":
         access_key_id = os.environ.get('AWS_ACCESS_KEY_ID', "")
         secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY', "")
@@ -44,19 +45,20 @@ if submit_button:
         bucket_port = os.environ.get('BUCKET_PORT', "443")
         bucket_protocol = os.environ.get('BUCKET_PROTOCOL', "https")
         bucket_region = None
+        verifySSLEnv = os.environ.get("S3_VERIFY_SSL", "False")
         
     bucket_endpoint = bucket_protocol + "://" + bucket_host + ":" + str(bucket_port)
 
-    config = Config(
-        signature_version = 's3v4'
-    )
+    verifySSL = False
+    if verifySSLEnv.lower() == "true":
+        verifySSL = True
 
     s3_client = boto3.client('s3',
         endpoint_url=bucket_endpoint,
         aws_access_key_id=access_key_id,
         aws_secret_access_key=secret_access_key,
-        config=config,
-        region_name=bucket_region)
+        region_name=bucket_region,
+        verify=verifySSL)
 
     with st.spinner("Processing Model..."):
         process_env = os.environ.copy()
