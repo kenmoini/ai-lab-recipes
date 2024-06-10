@@ -1,10 +1,14 @@
 FROM registry.access.redhat.com/ubi9/python-311:1-62.1716478620
 WORKDIR /opt/app-root/src/converter
+
 USER root
-RUN chown -R default:root /opt/app-root/src/converter
+RUN dnf install -y diffutils ccache \
+ && chown -R default:root /opt/app-root/src/converter
+
 USER default
-RUN git clone https://github.com/ggerganov/llama.cpp.git
-RUN cd llama.cpp/ && make
-RUN pip install -r llama.cpp/requirements.txt
+RUN git clone https://github.com/ggerganov/llama.cpp.git \
+ && cd llama.cpp/ && make \
+ && pip install -r llama.cpp/requirements.txt
+
 COPY . /opt/app-root/src/converter/
 ENTRYPOINT ["sh", "run.sh"]
