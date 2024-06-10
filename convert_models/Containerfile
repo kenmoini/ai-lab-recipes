@@ -8,7 +8,10 @@ RUN dnf install -y diffutils \
 USER default
 RUN git clone https://github.com/ggerganov/llama.cpp.git \
  && cd llama.cpp/ && make \
- && pip install -r llama.cpp/requirements.txt
+ && pip install -r requirements.txt
 
 COPY . /opt/app-root/src/converter/
+
+RUN pip install -r requirements.txt
+
 ENTRYPOINT ["sh", "run.sh"]
