@@ -72,6 +72,16 @@ if submit_button:
             line = x.stdout.readline().decode()
             num_lines += 1
             response.append(line)
+
+            # Upload to S3
+            modelName = f"{model_name}"
+            quantType = f"{quantization}"
+            splitModelPath = modelName.split("/")
+            fileName = splitModelPath[0] + "-" + splitModelPath[1] + "-" + quantType + ".gguf"
+            filePath = "/opt/app-root/src/converter/converted_models/gguf/" + fileName
+            if os.path.isfile(filePath):
+                s3_client.upload_file(filePath, bucket_name, fileName)
+
             if num_lines < 21:
                 container_output.code("".join(response),
                                       language="Bash")
