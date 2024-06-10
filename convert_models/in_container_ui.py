@@ -2,7 +2,6 @@ import streamlit as st
 import subprocess
 import os
 
-
 quantization_types = ["Q2_K","Q3_K_S","Q3_K_M", "Q3_K_L", "Q4_K_S",
                       "Q4_K_M", "Q5_K_S", "Q5_K_M", "Q6_K"]
 
@@ -26,11 +25,11 @@ keep_files = st.checkbox("Keep huggingface model files after conversion?")
 submit_button = st.button(label="submit")
 if submit_button:
     with st.spinner("Processing Model..."):
-        x = subprocess.Popen([f"HF_MODEL_URL={model_name}",
-                        f"QUANTIZATION={quantization}",
-                        f"KEEP_ORIGINAL_MODEL={keep_files}",
-                        "run.sh",
-                        "converter"],stdout=subprocess.PIPE) 
+        process_env = os.environ.copy()
+        process_env["HF_MODEL_URL"] = f"{model_name}"
+        process_env["QUANTIZATION"] = f"{quantization}"
+        process_env["KEEP_ORIGINAL_MODEL"] = f"{keep_files}"
+        x = subprocess.Popen(["run.sh", "converter"], env=process_env, stdout=subprocess.PIPE) 
         
         container_output = st.empty()
         response = []
