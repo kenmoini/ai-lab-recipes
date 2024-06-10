@@ -29,7 +29,7 @@ if submit_button:
         process_env["HF_MODEL_URL"] = f"{model_name}"
         process_env["QUANTIZATION"] = f"{quantization}"
         process_env["KEEP_ORIGINAL_MODEL"] = f"{keep_files}"
-        x = subprocess.Popen(["run.sh", "converter"], env=process_env, stdout=subprocess.PIPE) 
+        x = subprocess.Popen(["/opt/app-root/src/converter/run.sh", "converter"], env=process_env, stdout=subprocess.PIPE) 
         
         container_output = st.empty()
         response = []
