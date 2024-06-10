@@ -29,20 +29,20 @@ submit_button = st.button(label="submit")
 
 if submit_button:
     if f"{s3_connection_type}" == "AWS S3":
-        access_key_id = os.environ['AWS_ACCESS_KEY_ID']
-        secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY']
-        bucket_name = os.environ['BUCKET_NAME']
-        bucket_host = os.environ['BUCKET_HOST']
-        bucket_port = os.environ['BUCKET_PORT']
-        bucket_protocol = os.environ['BUCKET_PROTOCOL']
-        bucket_region = os.environ['BUCKET_REGION']
+        access_key_id = os.environ.get('AWS_ACCESS_KEY_ID', "")
+        secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY', "")
+        bucket_name = os.environ.get('BUCKET_NAME', "")
+        bucket_host = os.environ.get('BUCKET_HOST', "")
+        bucket_port = os.environ.get('BUCKET_PORT', "443")
+        bucket_protocol = os.environ.get('BUCKET_PROTOCOL', "https")
+        bucket_region = os.environ.get('BUCKET_REGION', "")
     if f"{s3_connection_type}" == "Nooba":
-        access_key_id = os.environ['AWS_ACCESS_KEY_ID']
-        secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY']
-        bucket_name = os.environ['BUCKET_NAME']
-        bucket_host = os.environ['BUCKET_HOST']
-        bucket_port = os.environ['BUCKET_PORT']
-        bucket_protocol = os.environ['BUCKET_PROTOCOL']
+        access_key_id = os.environ.get('AWS_ACCESS_KEY_ID', "")
+        secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY', "")
+        bucket_name = os.environ.get('BUCKET_NAME', "")
+        bucket_host = os.environ.get('BUCKET_HOST', "s3.openshift-storage.svc")
+        bucket_port = os.environ.get('BUCKET_PORT', "443")
+        bucket_protocol = os.environ.get('BUCKET_PROTOCOL', "https")
         bucket_region = None
         
     bucket_endpoint = bucket_protocol + "://" + bucket_host + ":" + str(bucket_port)
