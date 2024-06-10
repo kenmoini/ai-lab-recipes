@@ -15,17 +15,49 @@ with st.sidebar:
     
 col1, col2 =st.columns(2)
 with col1:
-    volume = st.text_input(label="Volume Name", 
-                           placeholder="models",)
+    s3_connection_type = st.selectbox(label="S3 Connection Type", 
+                                options=["AWS S3", "Nooba"],index=1)
 with col2:
     quantization = st.selectbox(label="Quantization Level", 
                                 options=quantization_types,index=5) 
 
 model_name = st.text_input(label="Enter a huggingface model url to convert",
                            placeholder="org/model_name")
+
 keep_files = st.checkbox("Keep huggingface model files after conversion?")
 submit_button = st.button(label="submit")
+
 if submit_button:
+    if f"{s3_connection_type}" == "AWS S3":
+        access_key_id = os.environ['AWS_ACCESS_KEY_ID']
+        secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY']
+        bucket_name = os.environ['BUCKET_NAME']
+        bucket_host = os.environ['BUCKET_HOST']
+        bucket_port = os.environ['BUCKET_PORT']
+        bucket_protocol = os.environ['BUCKET_PROTOCOL']
+        bucket_region = os.environ['BUCKET_REGION']
+    if f"{s3_connection_type}" == "Nooba":
+        access_key_id = os.environ['AWS_ACCESS_KEY_ID']
+        secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY']
+        bucket_name = os.environ['BUCKET_NAME']
+        bucket_host = os.environ['BUCKET_HOST']
+        bucket_port = os.environ['BUCKET_PORT']
+        bucket_protocol = os.environ['BUCKET_PROTOCOL']
+        bucket_region = None
+        
+    bucket_endpoint = bucket_protocol + "://" + bucket_host + ":" + str(bucket_port)
+
+    config = Config(
+        signature_version = 's3v4'
+    )
+
+    s3_client = boto3.client('s3',
+        endpoint_url=bucket_endpoint,
+        aws_access_key_id=access_key_id,
+        aws_secret_access_key=secret_access_key,
+        config=config,
+        region_name=bucket_region)
+
     with st.spinner("Processing Model..."):
         process_env = os.environ.copy()
         process_env["HF_MODEL_URL"] = f"{model_name}"
