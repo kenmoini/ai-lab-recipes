@@ -18,4 +18,6 @@ USER root
 RUN chmod a+x /opt/app-root/src/converter/run.sh
 USER default
 
+EXPOSE 8501
+
 ENTRYPOINT ["sh", "-c", "streamlit run /opt/app-root/src/converter/in_container_ui.py"]
